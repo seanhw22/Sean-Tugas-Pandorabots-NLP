@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0">
+  <!-- AIML 1.0: Optimasi Jadwal Les Musik dengan Bin Packing
+       - Ditujukan untuk Pandorabots / UDC
+       - Fitur: <random>, <condition>, <set>, <get>, <think>
+       - Menghapus tag <em> untuk kompatibilitas
+  -->
+
+  <!-- 1. Salam (tone + hint santai) -->
+  <category>
+    <pattern>HALO</pattern>
+    <template>
+      <condition name="tone">
+        <li value="santai">
+          <random>
+            <li>Halo! Mau tahu soal optimasi jadwal les musik? Kalau mau santai, ketik "tips santai" atau "ubah tone ke formal" kalau mau resmi.</li>
+            <li>Hai! Aku bisa jelaskan bin packing buat jadwal les — mau mulai dari mana? (ketik "jelaskan MILP" atau "jelaskan GA" untuk metode).</li>
+          </random>
+        </li>
+        <li>
+          <random>
+            <li>Halo. Saya dapat membantu menjelaskan optimasi jadwal les musik menggunakan Bin Packing. Ketik "jelaskan MILP" atau "jelaskan GA" untuk metode optimasinya.</li>
+            <li>Selamat datang. Tanyakan tentang Bin Packing atau penjadwalan les privat. Untuk penjelasan metodologi: "jelaskan MILP" / "jelaskan GA".</li>
+          </random>
+        </li>
+      </condition>
+    </template>
+  </category>
+
+  <!-- 2. Perkenalan -->
+  <category>
+    <pattern>SIAPA KAMU</pattern>
+    <template>
+      <condition name="tone">
+        <li value="santai">Aku bot edukasi yang jelasin optimasi jadwal les musik pake konsep Bin Packing. Santai aja tanya-nya.</li>
+        <li>Saya bot edukasi mengenai optimasi jadwal les musik dan Bin Packing.</li>
+      </condition>
+    </template>
+  </category>
+
+  <!-- 3. Apa itu Bin Packing (dengan petunjuk lanjut ke MILP/GA) -->
+  <category>
+    <pattern>APA ITU BIN PACKING</pattern>
+    <template>
+      <random>
+        <li>Bin Packing adalah masalah optimasi untuk menempatkan beberapa item ke dalam wadah (bin) agar jumlah wadah yang dipakai minimal. Untuk metode optimasi, ketik "jelaskan MILP" atau "jelaskan GA".</li>
+        <li>Bin Packing: bayangkan memasukkan barang ke beberapa kotak dengan kapasitas terbatas sehingga kotak terpakai seefisien mungkin. Ingin tahu pendekatan matematis atau heuristik? Coba "jelaskan MILP" atau "jelaskan GA".</li>
+      </random>
+    </template>
+  </category>
+
+  <!-- 4. Penerapan ke jadwal les musik -->
+  <category>
+    <pattern>BAGAIMANA BIN PACKING UNTUK JADWAL LES</pattern>
+    <template>
+      Pada jadwal les, "bin" = slot waktu atau sesi, dan "item" = sesi les tiap murid. Tujuannya menempatkan murid ke slot tanpa bentrok dan memaksimalkan pemakaian waktu. Untuk solusi optimal biasanya dipakai MILP; untuk skala besar sering dipakai GA atau heuristik.
+    </template>
+  </category>
+
+  <!-- 5. Parameter penting -->
+  <category>
+    <pattern>APA SAJA PARAMETER PENTING</pattern>
+    <template>
+      Parameter utama: daftar murid (item), durasi setiap sesi, kapasitas tiap slot (mis. jam per hari), preferensi waktu murid, jumlah guru/slot, dan batasan lain (mis. jeda antar sesi). Mau tahu bagaimana model MILP memformalkannya? ketik "jelaskan MILP".</template>
+  </category>
+
+  <!-- 6. Contoh sederhana (dengan koneksi metode) -->
+  <category>
+    <pattern>CONTOH SEDERHANA</pattern>
+    <template>
+      <random>
+        <li>Contoh: 3 murid (masing-masing 1 jam) dan 2 slot 2 jam. Susun sehingga semua murid terjadwalkan. Untuk mencari solusi optimal pada contoh kecil, MILP cocok; untuk contoh besar gunakan GA atau greedy.</li>
+        <li>Contoh: 5 murid dan 3 sesi per hari; gunakan Bin Packing untuk membagi murid ke sesi agar slot terpakai efisien. Ingin contoh implementasi? Tanyakan "contoh implementasi MILP" atau "contoh implementasi GA".</li>
+      </random>
+    </template>
+  </category>
+
+  <!-- 7. Jelaskan MILP -->
+  <category>
+    <pattern>JELASKAN MILP</pattern>
+    <template>
+      MILP (Mixed Integer Linear Programming) memodelkan masalah dengan variabel biner/bulat dan kendala linear. Untuk penjadwalan, kita buat variabel x[i,s] (apakah murid i ke slot s?), kendala kapasitas slot, dan fungsi tujuan mis. meminimalkan jumlah slot terpakai. Cocok untuk ukuran kecil-menengah dengan solver yang kuat.</template>
+  </category>
+
+  <!-- 8. Jelaskan GA -->
+  <category>
+    <pattern>JELASKAN GA</pattern>
+    <template>
+      GA (Genetic Algorithm) memulai populasi solusi acak, lalu menerapkan seleksi, crossover, dan mutasi untuk mencari solusi yang baik. GA berguna bila ruang solusi besar dan model matematis susah diselesaikan secara optimal secara cepat; hasilnya bersifat aproksimasi.</template>
+  </category>
+
+  <!-- 9. Perbedaan MILP dengan GA -->
+  <category>
+    <pattern>BEDANYA MILP DENGAN GA</pattern>
+    <template>
+      <condition name="tone">
+        <li value="santai">Singkat: MILP bisa optimal kalau solver kuat dan problem kecil/terstruktur; GA fleksibel dan cocok untuk problem besar, tapi tidak menjamin optimalitas.</li>
+        <li>Secara umum, MILP memberikan solusi optimal bila dimodelkan dan diselesaikan oleh solver; GA memberi solusi cepat namun heuristik. Pilih MILP untuk akurasi, GA untuk skala dan fleksibilitas.</li>
+      </condition>
+    </template>
+  </category>
+
+  <!-- 10. Role: saya guru -->
+  <category>
+    <pattern>SAYA GURU</pattern>
+    <template>
+      <think><set name="role">guru</set></think>
+      Oke, kucatat: kamu seorang guru. Aku akan menyesuaikan saran agar cocok untuk pengajar.</template>
+  </category>
+
+  <!-- 11. Role: saya murid -->
+  <category>
+    <pattern>SAYA MURID</pattern>
+    <template>
+      <think><set name="role">murid</set></think>
+      Siap, kucatat: kamu murid. Aku akan fokus ke perspektif murid saat memberi contoh.</template>
+  </category>
+
+  <!-- 12. Mengapa penting (memakai role) -->
+  <category>
+    <pattern>MENGAPA PENTING</pattern>
+    <template>
+      <condition name="role">
+        <li value="guru">Untuk guru: optimasi mengurangi slot kosong, memudahkan planning, dan meningkatkan efisiensi kerja serta potensi penghasilan.</li>
+        <li value="murid">Untuk murid: jadwal teratur mengurangi bentrok dan mempermudah memilih waktu les yang pas.</li>
+        <li>Secara umum, optimasi membuat penggunaan waktu lebih efisien untuk semua pihak.</li>
+      </condition>
+    </template>
+  </category>
+
+  <!-- 13. Cara memulai (memberi opsi MILP/GA) -->
+  <category>
+    <pattern>BAGAIMANA SAYA MULAI</pattern>
+    <template>
+      Langkah awal: 1) Kumpulkan data murid dan preferensi, 2) Tetapkan kapasitas slot, 3) Pilih metode: MILP untuk solusi optimal (contoh kecil), GA/heuristik untuk skala besar, 4) Uji dan evaluasi. Jika mau contoh kode: tanya "contoh implementasi MILP" atau "contoh implementasi GA".</template>
+  </category>
+
+  <!-- 14. Ubah tone -->
+  <category>
+    <pattern>UBAH TONE KE *</pattern>
+    <template>
+      <think><set name="tone"><star/></set></think>
+      <condition name="tone">
+        <li value="santai">Oke, tone diubah menjadi santai. Ketik "tips santai" untuk contoh gaya jawaban santai.</li>
+        <li value="formal">Baik, tone diubah menjadi formal.</li>
+        <li>Tone disimpan sebagai "<get name="tone"/>".</li>
+      </condition>
+    </template>
+  </category>
+
+  <!-- 15. Tips santai -->
+  <category>
+    <pattern>TIPS SANTAI</pattern>
+    <template>
+      Konten santai: jelaskan konsep pakai analogi, beri contoh singkat, dan pakai emotikon. Contoh: "Bin packing itu kaya ngepasin kursi ke meja biar muat. Mau tahu MILP atau GA yang cocok?"</template>
+  </category>
+
+  <!-- 16. Topik preferensi -->
+  <category>
+    <pattern>SAYA MAU TOPIK *</pattern>
+    <template>
+      <think><set name="topic"><star/></set></think>
+      Baik, topik sekarang diatur menjadi <get name="topic"/>. Tanyakan sesuatu tentang <get name="topic"/> (mis. "jelaskan <get name="topic"/>").</template>
+  </category>
+
+  <!-- 17. Fallback dinamis dengan hint santai -->
+  <category>
+    <pattern>*</pattern>
+    <template>
+      <random>
+        <li>Maaf, saya fokus menjelaskan optimasi jadwal les musik (Bin Packing, MILP, GA). Coba tanya: "Apa itu bin packing", "Contoh sederhana", atau "Bagaimana saya mulai".</li>
+        <li>
+          <condition name="tone">
+            <li value="santai">Eh, aku cuma ngomongin soal optimasi jadwal musik. Mau ubah tone? ketik "ubah tone ke formal" atau lihat "tips santai".</li>
+            <li>Bot ini fokus pada Bin Packing, MILP, dan GA untuk penjadwalan. Silakan tanya salah satu.</li>
+          </condition>
+        </li>
+      </random>
+    </template>
+  </category>
+
+</aiml>
